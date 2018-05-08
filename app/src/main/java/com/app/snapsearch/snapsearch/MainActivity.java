@@ -14,10 +14,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         // Hooks up image button in activity_main to the java object.
         ImageButton cameraButton = (ImageButton) findViewById(R.id.CameraButton);
         //Creates the camera intent.
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        //puts the date in a bundle stored in a map. value?????
+        captureImage.putExtra("key", 0);
+
         //Onclick for the camera button moves user to a camera intent to take a photo.
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
