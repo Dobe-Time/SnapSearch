@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.app.snapsearch.snapsearch">
-
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,19 +16,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".CameraActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_camera"
-            android:theme="@style/FullscreenTheme"></activity>
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.app.snapsearch.snapsearch"
-            android:exported="false"
-            android:grantUriPremission="true">
-        </provider>
     </application>
-
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
