@@ -21,11 +21,13 @@ public class MainActivity extends AppCompatActivity {
         //Creates the camera intent.
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
+
         //Onclick for the camera button moves user to a camera intent to take a photo.
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(captureImage);
+
                 //puts the date in a bundle stored in a map. value????? use bitmap
                 captureImage.putExtra(MediaStore.EXTRA_OUTPUT, 0);
 
