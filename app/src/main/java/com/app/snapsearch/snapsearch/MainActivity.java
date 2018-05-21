@@ -32,6 +32,9 @@ import com.microsoft.projectoxford.vision.rest.VisionServiceException;
 
 import org.json.JSONObject;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -46,7 +49,7 @@ import cz.msebera.android.httpclient.impl.client.HttpClients;
 
 public class MainActivity extends AppCompatActivity {
     private  static final String TAG =  "ComputerVisionUtil";
-    private static final String key = "21381d6e485e4fc6bc5836904ff344c3";
+    //REMEMBER TO GET KEY OUT OF HERE
     public  VisionServiceClient visionServiceClient = new VisionServiceRestClient("2ee6b523d54e4bf3af298d87e2314354", "https://westus2.api.cognitive.microsoft.com/vision/v2.0");
 
     @Override
