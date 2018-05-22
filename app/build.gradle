@@ -28,6 +28,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.microsoft.projectoxford:vision:1.0.394'
-    compile group: 'cz.msebera.android' , name: 'httpclient', version: '4.4.1.1'
-   // implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.5'
+    compile 'cz.msebera.android:httpclient:4.4.1.1'
+    // implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.5'
 }
