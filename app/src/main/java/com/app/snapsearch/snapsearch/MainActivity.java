@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private  static final String TAG =  "ComputerVisionUtil";
     //REMEMBER TO GET KEY OUT OF HERE
     // Parmas for constructor are api key and region of api key.
-    private static final String KEY = "PUT KEY HERE";
+    private static final String KEY = "2ee6b523d54e4bf3af298d87e2314354";
     public  VisionServiceClient visionServiceClient = new VisionServiceRestClient(KEY, "https://westus2.api.cognitive.microsoft.com/vision/v2.0");
     public static final int CAMERA_REQUEST = 1;
     Image image;
