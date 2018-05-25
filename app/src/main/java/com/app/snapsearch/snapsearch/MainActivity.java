@@ -11,6 +11,7 @@ import java.net.URI;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -42,6 +43,7 @@ import org.json.JSONObject;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.widget.Toast;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -89,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                                 //This describes the loading message
                                 publishProgress("Loading....");
                                 // These lines specify which Json tags will be taken from visionServiceClient.analyzeImage.
-                                String[] features = {"description"};
+                                String[] features = {"tags"};
                                 String[] details = {};
                                 // The big one, the call to the Image recognition API.
                                 AnalysisResult result = visionServiceClient.analyzeImage(inputStream, features, details);
@@ -125,13 +127,16 @@ public class MainActivity extends AppCompatActivity {
                             TextView textView = (TextView)findViewById(R.id.textView);
                             StringBuilder stringBuilder = new StringBuilder();
 
-                            for(Caption caption : result.description.captions){
-                                stringBuilder.append(caption.text);
-                            }
-//                            for(Tag tag : result.tags){
-//                                stringBuilder.append(tag.name + " ");
+//                            for(Caption caption : result.description.captions){
+//                                stringBuilder.append(caption.text);
 //                            }
+                            for(Tag tag : result.tags){
+                                stringBuilder.append(tag.name + " ");
+                            }
+
                             textView.setText(stringBuilder);
+                            Toast.makeText(MainActivity.this, "Fully Loaded", Toast.LENGTH_SHORT).show();
+
                         }
                     };
                     //CALL TO THE ASYNC TASK.

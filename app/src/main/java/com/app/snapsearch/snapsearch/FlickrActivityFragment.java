@@ -40,11 +40,7 @@ public class FlickrActivityFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            try {
-                String reslt = new FlikrPicker().getUrlString("http://www.bignerdranch.com");
-            }catch (IOException ioe){
-                return null;
-            }
+            new FlickrPicker().fetchItems();
             return null;
         }
     }

@@ -1,13 +1,21 @@
 package com.app.snapsearch.snapsearch;
 
+import android.net.Uri;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 //Make it a try catch.
-public class FlikrPicker {
+public class FlickrPicker {
+    private static final String TAG = "FlickrFetcher";
+    private static final String API_KEY = "3f4a24364038b034dcfe90f376b69b79";
     public byte[] getUrlByte(String urlSpec) throws IOException{
         URL url = new URL(urlSpec);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -32,6 +40,27 @@ public class FlikrPicker {
     }
     public String getUrlString(String urlSpec)throws IOException{
         return new String(getUrlByte(urlSpec));
+    }
+    public void fetchItems() {
+        try{
+            String url = Uri.parse("http://api.flickr.com/service/rest/")
+                    .buildUpon()
+                    .appendQueryParameter("method", "flickr.photos.getRecent")
+                    .appendQueryParameter("api_key", API_KEY)
+                    .appendQueryParameter("format", "json")
+                    .appendQueryParameter("extras", "url_s")
+                    .build().toString();
+            String jsonString = getUrlString(url);
+            JSONObject jsonBody = new JSONObject(jsonString);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void parseItems(List<GalleryItem> items, JSONObject jsonBody)throws IOException, JSONException{
+      //  JSONObject photoJsonObject = jsonBody.getJSONObject()
     }
 
 }
