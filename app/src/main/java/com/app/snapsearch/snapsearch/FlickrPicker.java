@@ -59,6 +59,7 @@ public class FlickrPicker {
                     .build().toString();
             String jsonString = getUrlString(url);
             JSONObject jsonBody = new JSONObject(jsonString);
+            parseItems(items, jsonBody);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
