@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        int pictureId = R.drawable.timesquare;
+        int pictureId = R.drawable.mountain;
         Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), pictureId);
         // Hooks up image button in activity_main to the java object.
         ImageButton cameraButton = (ImageButton) findViewById(R.id.CameraButton);
