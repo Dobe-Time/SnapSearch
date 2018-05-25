@@ -2,14 +2,20 @@ package com.app.snapsearch.snapsearch;
 
 import android.net.Uri;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 //Make it a try catch.
@@ -41,7 +47,8 @@ public class FlickrPicker {
     public String getUrlString(String urlSpec)throws IOException{
         return new String(getUrlByte(urlSpec));
     }
-    public void fetchItems() {
+    public List<GalleryItem> fetchItems() {
+        List<GalleryItem> items = new ArrayList<GalleryItem>();
         try{
             String url = Uri.parse("http://api.flickr.com/service/rest/")
                     .buildUpon()
@@ -57,10 +64,18 @@ public class FlickrPicker {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return items;
     }
-
     private void parseItems(List<GalleryItem> items, JSONObject jsonBody)throws IOException, JSONException{
-      //  JSONObject photoJsonObject = jsonBody.getJSONObject()
-    }
+        Gson gson = new Gson();
+        Type galleryItemType = new TypeToken<ArrayList<GalleryItem>>() {
+        }.getType();
 
+        JSONObject photosJsonObject = jsonBody.getJSONObject("photos");
+        JSONArray photosJsonArray = photosJsonObject.getJSONArray("photo");
+        String jsonPhotosString = photosJsonArray.toString();
+
+        List<GalleryItem> galleryItemList = gson.fromJson(jsonPhotosString, galleryItemType);
+        items.addAll(galleryItemList);
+    }
 }
