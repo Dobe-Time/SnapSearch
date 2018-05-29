@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,12 +80,16 @@ public class FlickrActivityFragment extends Fragment {
         }
     }
 
-    private class FetchPictures extends AsyncTask<Void, Void, Void>{
+    private class FetchPictures extends AsyncTask<Void, Void, List<GalleryItem>>{
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected List<GalleryItem> doInBackground(Void... voids) {
             new FlickrPicker().fetchItems();
             return null;
+        }
+        protected void onPostExecute(List<GalleryItem> items){
+            mItems = items;
+            setupAdapter();
         }
     }
 }
