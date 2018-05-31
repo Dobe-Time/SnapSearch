@@ -50,7 +50,8 @@ public class FlickrPicker {
     public List<GalleryItem> fetchItems() {
         List<GalleryItem> items = new ArrayList<GalleryItem>();
         try{
-            String url = Uri.parse("http://api.flickr.com/service/rest/")
+           // https://api.flickr.com/services/rest/?method=flickr.test.echo&name=value
+            String url = Uri.parse("https://api.flickr.com/services/rest/")
                     .buildUpon()
                     .appendQueryParameter("method", "flickr.photos.getRecent")
                     .appendQueryParameter("api_key", API_KEY)

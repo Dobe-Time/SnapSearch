@@ -1,61 +1,38 @@
 package com.app.snapsearch.snapsearch;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.net.HttpURLConnection;
-import java.net.URI;
-
-import java.net.URI;
-
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
+import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Paint;
 import android.media.Image;
 import android.os.AsyncTask;
-import android.os.StrictMode;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.microsoft.projectoxford.vision.VisionServiceClient;
 import com.microsoft.projectoxford.vision.VisionServiceRestClient;
 import com.microsoft.projectoxford.vision.contract.AnalysisResult;
-import com.microsoft.projectoxford.vision.contract.Caption;
 import com.microsoft.projectoxford.vision.contract.Tag;
 import com.microsoft.projectoxford.vision.rest.VisionServiceException;
 
-import org.json.JSONObject;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.widget.Toast;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URL;
-import java.security.Key;
-
-import cz.msebera.android.httpclient.client.HttpClient;
-import cz.msebera.android.httpclient.entity.ByteArrayEntity;
-import cz.msebera.android.httpclient.impl.client.HttpClients;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -71,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        int pictureId = R.drawable.mountain;
+        final Intent flickr = new Intent(getApplicationContext(),FlickrActivityFragment.class);
+        int pictureId = R.drawable.timesquare;
         Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), pictureId);
         // Hooks up image button in activity_main to the java object.
         ImageButton cameraButton = (ImageButton) findViewById(R.id.CameraButton);
@@ -84,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 ProgressDialog mDialog = new ProgressDialog(MainActivity.this);
                 @Override
                 public void onClick(View v) {
+
                     @SuppressLint("StaticFieldLeak") AsyncTask<InputStream, String, String> visonTask = new AsyncTask<InputStream, String, String>() {
                         @Override
                         protected String doInBackground(InputStream... fileInputStreams) {
@@ -137,6 +116,11 @@ public class MainActivity extends AppCompatActivity {
                             textView.setText(stringBuilder);
                             Toast.makeText(MainActivity.this, "Fully Loaded", Toast.LENGTH_SHORT).show();
 
+
+                            FlickrActivityFragment fragment = new FlickrActivityFragment();
+                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                            transaction.replace(R.id.activity_main, fragment);
+                            transaction.commit();
                         }
                     };
                     //CALL TO THE ASYNC TASK.

@@ -1,5 +1,6 @@
 package com.app.snapsearch.snapsearch;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -84,12 +85,31 @@ public class FlickrActivityFragment extends Fragment {
 
         @Override
         protected List<GalleryItem> doInBackground(Void... voids) {
-            new FlickrPicker().fetchItems();
-            return null;
+            FlickrPicker picker = new FlickrPicker();
+            List<GalleryItem> someList = null;
+            try {
+                someList = picker.fetchItems();
+            }catch (android.os.NetworkOnMainThreadException e){
+                e.printStackTrace();
+            }
+            return someList;
         }
         protected void onPostExecute(List<GalleryItem> items){
             mItems = items;
             setupAdapter();
         }
+
+       // @Override
+//        protected void onProgressUpdate(Void... values) {
+//           // ProgressDialog mDialog = new ProgressDialog(getContext());
+//           // mDialog.setMessage((CharSequence) "loading");
+//        }
+//        @Override
+//        protected void onPreExecute() {
+//            ProgressDialog mDialog = new ProgressDialog(getContext());
+//            mDialog.show();
+//        }
+
+
     }
 }
