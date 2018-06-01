@@ -26,6 +26,7 @@ public class FlickrActivityFragment extends Fragment {
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         FetchPictures fetcher = new FetchPictures();
@@ -35,6 +36,7 @@ public class FlickrActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_flickr, container, false);
         mPictureView = (RecyclerView) view.findViewById(R.id.RecyclerViewPic);
         mPictureView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
@@ -82,7 +84,7 @@ public class FlickrActivityFragment extends Fragment {
     }
 
     private class FetchPictures extends AsyncTask<Void, Void, List<GalleryItem>>{
-
+        ProgressDialog mDialog = new ProgressDialog(getContext());
         @Override
         protected List<GalleryItem> doInBackground(Void... voids) {
             FlickrPicker picker = new FlickrPicker();
@@ -95,20 +97,19 @@ public class FlickrActivityFragment extends Fragment {
             return someList;
         }
         protected void onPostExecute(List<GalleryItem> items){
+            mDialog.dismiss();
             mItems = items;
             setupAdapter();
         }
 
-       // @Override
-//        protected void onProgressUpdate(Void... values) {
-//           // ProgressDialog mDialog = new ProgressDialog(getContext());
-//           // mDialog.setMessage((CharSequence) "loading");
-//        }
-//        @Override
-//        protected void onPreExecute() {
-//            ProgressDialog mDialog = new ProgressDialog(getContext());
-//            mDialog.show();
-//        }
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            mDialog.setMessage("Getting Images");
+        }
+        @Override
+        protected void onPreExecute() {
+            mDialog.show();
+        }
 
 
     }

@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         protected void onProgressUpdate(String... values) {
-                            mDialog.setMessage(values[0]);
+                            mDialog.setMessage("Analyzing Image");
                         }
 
                         @Override
@@ -115,12 +115,11 @@ public class MainActivity extends AppCompatActivity {
 
                             textView.setText(stringBuilder);
                             Toast.makeText(MainActivity.this, "Fully Loaded", Toast.LENGTH_SHORT).show();
-
-
                             FlickrActivityFragment fragment = new FlickrActivityFragment();
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                             transaction.replace(R.id.activity_main, fragment);
                             transaction.commit();
+
                         }
                     };
                     //CALL TO THE ASYNC TASK.

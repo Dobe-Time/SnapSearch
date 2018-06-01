@@ -3,6 +3,7 @@ package com.app.snapsearch.snapsearch;
 import android.net.Uri;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
@@ -56,6 +57,7 @@ public class FlickrPicker {
                     .appendQueryParameter("method", "flickr.photos.getRecent")
                     .appendQueryParameter("api_key", API_KEY)
                     .appendQueryParameter("format", "json")
+                    .appendQueryParameter("nojsoncallback", "1")
                     .appendQueryParameter("extras", "url_s")
                     .build().toString();
             String jsonString = getUrlString(url);
@@ -69,15 +71,19 @@ public class FlickrPicker {
         return items;
     }
     private void parseItems(List<GalleryItem> items, JSONObject jsonBody)throws IOException, JSONException{
-        Gson gson = new Gson();
-        Type galleryItemType = new TypeToken<ArrayList<GalleryItem>>() {
-        }.getType();
-
         JSONObject photosJsonObject = jsonBody.getJSONObject("photos");
         JSONArray photosJsonArray = photosJsonObject.getJSONArray("photo");
-        String jsonPhotosString = photosJsonArray.toString();
+        for(int i = 0; i < photosJsonArray.length(); i++){
+            JSONObject photoJsonObject =photosJsonArray.getJSONObject(i);
+            GalleryItem item = new GalleryItem();
+            item.setId(photoJsonObject.getString("id"));
+            item.setCaption(photoJsonObject.getString("title"));
 
-        List<GalleryItem> galleryItemList = gson.fromJson(jsonPhotosString, galleryItemType);
-        items.addAll(galleryItemList);
+            if(!photoJsonObject.has("url_s")){
+                continue;
+            }
+            item.setUrl(photoJsonObject.getString("url_s"));
+            items.add(item);
+        }
     }
 }
