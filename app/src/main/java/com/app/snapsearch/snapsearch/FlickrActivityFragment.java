@@ -1,15 +1,21 @@
 package com.app.snapsearch.snapsearch;
 
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -20,7 +26,9 @@ import java.util.List;
  */
 public class FlickrActivityFragment extends Fragment {
     private RecyclerView mPictureView;
+    private static final String TAG = "FlickrActivityFragment";
     private List<GalleryItem> mItems = new ArrayList<>();
+    private ImageDownloader<PhotoHolder> mImageDownloader;
     public FlickrActivityFragment newInstance() {
         return  new FlickrActivityFragment();
     }
@@ -31,6 +39,26 @@ public class FlickrActivityFragment extends Fragment {
         setRetainInstance(true);
         FetchPictures fetcher = new FetchPictures();
         fetcher.execute();
+
+        Handler responseHandler = new Handler();
+        mImageDownloader = new ImageDownloader<>(responseHandler);
+        mImageDownloader.setmImageDownloaderListener(new ImageDownloader.ImageDownloaderListener<PhotoHolder>() {
+            @Override
+            public void onImageDownloaded(PhotoHolder photoHolder, Bitmap thumbnail) {
+                Drawable drawable = new BitmapDrawable(getResources(), thumbnail);
+                photoHolder.bindDrawable(drawable);
+            }
+        });
+
+
+        mImageDownloader.start();
+        mImageDownloader.getLooper();
+        Log.i(TAG, "Background Thread Started!");
+    }
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        mImageDownloader.clearQueue();
     }
 
     @Override
@@ -49,13 +77,13 @@ public class FlickrActivityFragment extends Fragment {
         }
     }
     private class PhotoHolder extends RecyclerView.ViewHolder{
-        private TextView mTitleTextView;
+        private ImageView mItemImageView;
         public PhotoHolder(View itemView) {
             super(itemView);
-            mTitleTextView = (TextView) itemView;
+            mItemImageView = (ImageView) itemView.findViewById(R.id.item_image_view);
         }
-        public void bindGalleryItem(GalleryItem item){
-            mTitleTextView.setText(item.toString());
+        public void bindDrawable(Drawable drawable){
+            mItemImageView.setImageDrawable(drawable);
         }
     }
 
@@ -67,14 +95,17 @@ public class FlickrActivityFragment extends Fragment {
 
         @Override
         public PhotoHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            TextView textView = new TextView(getActivity());
-            return new PhotoHolder(textView);
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            View v = inflater.inflate(R.layout.list_item_gallery, parent, false);
+            return new PhotoHolder(v);
         }
 
         @Override
-        public void onBindViewHolder(@NonNull PhotoHolder holder, int position) {
+        public void onBindViewHolder(PhotoHolder holder, int position) {
             GalleryItem galleryItem = mGalleryItems.get(position);
-            holder.bindGalleryItem(galleryItem);
+            Drawable placeHolder = getResources().getDrawable(R.drawable.tree);
+            holder.bindDrawable(placeHolder);
+            mImageDownloader.queueImage(holder, galleryItem.getUrl());
         }
 
         @Override
@@ -110,7 +141,11 @@ public class FlickrActivityFragment extends Fragment {
         protected void onPreExecute() {
             mDialog.show();
         }
-
-
+    }
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        mImageDownloader.quit();
+        Log.i(TAG,"Background destroyed!");
     }
 }
