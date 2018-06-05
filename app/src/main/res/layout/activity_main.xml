@@ -18,6 +18,7 @@
         android:layout_marginRight="84dp"
         android:layout_marginStart="63dp"
         android:layout_marginTop="8dp"
+        android:onClick="onImageGalleryClicked"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.573"
