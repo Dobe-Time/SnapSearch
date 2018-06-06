@@ -23,14 +23,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.573"
         app:layout_constraintStart_toEndOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/ImgPicture"
         app:layout_constraintVertical_bias="0.131"
         app:srcCompat="@android:drawable/ic_menu_camera" />
 
+    <Button
+        android:id="@+id/UploadButton"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="156dp"
+        android:onClick="onImageGalleryClicked"
+        app:layout_constraintTop_toBottomOf="@+id/ImgPicture"
+        tools:layout_editor_absoluteX="142dp"
+        android:text="@string/button_text"/>
+
     <TextView
         android:id="@+id/textView"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
+        android:layout_width="267dp"
+        android:layout_height="18dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"

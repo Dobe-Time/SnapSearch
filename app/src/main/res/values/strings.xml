@@ -2,6 +2,7 @@
     <string name="app_name">SnapSearch</string>
 
     <string name="title_activity_camera">CameraActivity</string>
+    <string name="button_text">"Upload Image</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_gallery">GalleryActivity</string>
