@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.DrawableRes;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -34,6 +35,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -44,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String KEY = "2ee6b523d54e4bf3af298d87e2314354";
     public  VisionServiceClient visionServiceClient = new VisionServiceRestClient(KEY, "https://westus2.api.cognitive.microsoft.com/vision/v2.0");
     public static final int CAMERA_REQUEST = 1;
-    Image image;
-    private ImageView imgPicture;
+    Bitmap image;
+    ImageView imgPicture;
 
     public void onImageGalleryClicked(View v){
         //invoke image gallery using implicit intent
@@ -65,26 +67,40 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(resultCode == RESULT_OK){
-            //if happens, everything worked
-            if(requestCode == IMAGE_GALLERY_REQUEST){
-                //if happens we hear back from the image gallery
-                Uri imageUri = data.getData();
-
-                InputStream inputStream;
-
+        if (requestCode == IMAGE_GALLERY_REQUEST) {
+            Bitmap datifoto = null;
+            Uri picUri = data.getData();//<- get Uri here from data intent
+            if(picUri !=null){
                 try {
-                    inputStream = getContentResolver().openInputStream(imageUri);
-                    Bitmap image = BitmapFactory.decodeStream(inputStream);
-                    imgPicture.setImageBitmap(image);
-                } catch (FileNotFoundException e){
-                    e.printStackTrace();
-                    Toast.makeText(this, "Unable to open image", Toast.LENGTH_LONG).show();
+                    datifoto = android.provider.MediaStore.Images.Media.getBitmap(
+                            this.getContentResolver(),
+                            picUri);
+                    image = datifoto;
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
+            }
+//        if(resultCode == RESULT_OK){
+//            //if happens, everything worked
+//            if(requestCode == IMAGE_GALLERY_REQUEST){
+//                //if happens we hear back from the image gallery
+////                Uri imageUri = data.getData();
+//                //InputStream inputStream;
+//                Bitmap image = (Bitmap) data.getExtras().get("data");
+//                imgPicture.setImageBitmap(image);
+////                try {
+////                    inputStream = getContentResolver().openInputStream(imageUri);
+////
+////                } catch (FileNotFoundException e){
+////                    e.printStackTrace();
+////                    Toast.makeText(this, "Unable to open image", Toast.LENGTH_LONG).show();
+////                }
             }
         }
 
-    }
+    //}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,12 +108,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         final Intent flickr = new Intent(getApplicationContext(),FlickrActivityFragment.class);
-        int pictureId = R.drawable.timesquare;
+        int pictureId = R.drawable.tree;
+        ImageView imgPicture = (ImageView) this.findViewById(R.id.ImgPicture);
         Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), pictureId);
         // Hooks up image button in activity_main to the java object.
         ImageButton cameraButton = (ImageButton) findViewById(R.id.CameraButton);
-
-        imgPicture = (ImageView) findViewById(R.id.ImgPicture);
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         mBitmap.compress(Bitmap.CompressFormat.JPEG, 50, outputStream);
@@ -176,6 +191,17 @@ public class MainActivity extends AppCompatActivity {
             });
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(image != null){
+            ImageView imgPicture = (ImageView) this.findViewById(R.id.ImgPicture);
+            imgPicture.invalidate();
+            imgPicture.setImageBitmap(image);
         }
 
     }
