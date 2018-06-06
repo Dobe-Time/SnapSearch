@@ -110,22 +110,19 @@ public class MainActivity extends AppCompatActivity {
         final Intent flickr = new Intent(getApplicationContext(),FlickrActivityFragment.class);
         int pictureId = R.drawable.tree;
         ImageView imgPicture = (ImageView) this.findViewById(R.id.ImgPicture);
-        Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), pictureId);
+
         // Hooks up image button in activity_main to the java object.
         ImageButton cameraButton = (ImageButton) findViewById(R.id.CameraButton);
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        mBitmap.compress(Bitmap.CompressFormat.JPEG, 50, outputStream);
-        final ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
         try {
             cameraButton.setOnClickListener(new View.OnClickListener() {
                 ProgressDialog mDialog = new ProgressDialog(MainActivity.this);
                 @Override
                 public void onClick(View v) {
-
-                    @SuppressLint("StaticFieldLeak") AsyncTask<InputStream, String, String> visonTask = new AsyncTask<InputStream, String, String>() {
+                    @SuppressLint("StaticFieldLeak") AsyncTask<ByteArrayInputStream, String, String> visonTask = new AsyncTask<ByteArrayInputStream, String, String>() {
                         @Override
-                        protected String doInBackground(InputStream... fileInputStreams) {
+                        protected String doInBackground(ByteArrayInputStream... fileInputStreams) {
+                            ByteArrayInputStream inputStream1;
+                            inputStream1 = fileInputStreams[0];
                             try {
                                 //This describes the loading message
                                 publishProgress("Loading....");
@@ -133,8 +130,7 @@ public class MainActivity extends AppCompatActivity {
                                 String[] features = {"tags"};
                                 String[] details = {};
                                 // The big one, the call to the Image recognition API.
-                                AnalysisResult result = visionServiceClient.analyzeImage(inputStream, features, details);
-
+                                AnalysisResult result = visionServiceClient.analyzeImage(inputStream1 , features, details);
                                 String strResult = new Gson().toJson(result);
                                 return strResult;
                                 // catching exceptions.
@@ -183,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     };
                     //CALL TO THE ASYNC TASK.
-                    visonTask.execute(inputStream);
+                    visonTask.execute(setImage(image));
                 }
                 // startActivity(captureImage);
                 //puts the date in a bundle stored in a map. value????? use bitmap
@@ -204,6 +200,16 @@ public class MainActivity extends AppCompatActivity {
             imgPicture.setImageBitmap(image);
         }
 
+    }
+    public ByteArrayInputStream setImage(Bitmap image){
+        Bitmap mBitmap;
+        if (image == null){
+            image = BitmapFactory.decodeResource(getResources(), R.drawable.timesquare);
+        }
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 50, outputStream);
+        final ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+        return inputStream;
     }
 }
 //    public void onImageGallerySelected(View v){
