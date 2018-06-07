@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                         protected void onPostExecute(String s) {
                             mDialog.dismiss();
                             AnalysisResult result = new Gson().fromJson(s, AnalysisResult.class);
-                            TextView textView = (TextView)findViewById(R.id.textView);
+                            //TextView textView = (TextView)findViewById(R.id.textView);
                             StringBuilder stringBuilder = new StringBuilder();
                             // adds all the"tags" from the json out put of computer vision and makes a string.
                             // This string will be displayed on screen and passed in as flikr's query.
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                                 stringBuilder.append(tag.name + " ");
                             }
 
-                            textView.setText(stringBuilder);
+                            //textView.setText(stringBuilder);
                             Toast.makeText(MainActivity.this, "Fully Loaded", Toast.LENGTH_SHORT).show();
                             // bundle to pass  in search query
                             Bundle bundle = new Bundle();
