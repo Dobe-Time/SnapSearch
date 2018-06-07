@@ -8,20 +8,6 @@
     tools:context=".FlickrActivityFragment"
     tools:showIn="@layout/activity_flickr">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/RecyclerViewPic"
-        android:layout_width="373dp"
-        android:layout_height="467dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <android.support.constraint.Guideline
         android:id="@+id/guideline2"
         android:layout_width="wrap_content"
@@ -35,4 +21,18 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="20dp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/RecyclerViewPic"
+        android:layout_width="527dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 </android.support.constraint.ConstraintLayout>
