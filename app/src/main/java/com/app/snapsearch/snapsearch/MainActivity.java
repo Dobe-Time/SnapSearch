@@ -171,7 +171,10 @@ public class MainActivity extends AppCompatActivity {
 
                             textView.setText(stringBuilder);
                             Toast.makeText(MainActivity.this, "Fully Loaded", Toast.LENGTH_SHORT).show();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("query", stringBuilder.toString());
                             FlickrActivityFragment fragment = new FlickrActivityFragment();
+                            fragment.setArguments(bundle);
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                             transaction.replace(R.id.activity_main, fragment);
                             transaction.commit();

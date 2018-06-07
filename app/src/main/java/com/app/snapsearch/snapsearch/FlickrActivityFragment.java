@@ -32,6 +32,7 @@ public class FlickrActivityFragment extends Fragment {
     public FlickrActivityFragment newInstance() {
         return  new FlickrActivityFragment();
     }
+    String query;
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -64,7 +65,7 @@ public class FlickrActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        query = (String) getArguments().get("query");
         View view = inflater.inflate(R.layout.fragment_flickr, container, false);
         mPictureView = (RecyclerView) view.findViewById(R.id.RecyclerViewPic);
         mPictureView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
@@ -121,7 +122,7 @@ public class FlickrActivityFragment extends Fragment {
             FlickrPicker picker = new FlickrPicker();
             List<GalleryItem> someList = null;
             try {
-                someList = picker.fetchItems();
+                someList = picker.searchPhotots(query);
             }catch (android.os.NetworkOnMainThreadException e){
                 e.printStackTrace();
             }
