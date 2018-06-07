@@ -13,8 +13,11 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,14 +35,23 @@ public class FlickrActivityFragment extends Fragment {
     public FlickrActivityFragment newInstance() {
         return  new FlickrActivityFragment();
     }
+    String query;
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        Button backButton = getActivity().findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
         setRetainInstance(true);
+        setHasOptionsMenu(true);
+        //call to fetch pictures async talsk to get picturs loaded from flickr
         FetchPictures fetcher = new FetchPictures();
         fetcher.execute();
-
+        //gets pictures from flickr and binds them to photo holder to be displayed.
         Handler responseHandler = new Handler();
         mImageDownloader = new ImageDownloader<>(responseHandler);
         mImageDownloader.setmImageDownloaderListener(new ImageDownloader.ImageDownloaderListener<PhotoHolder>() {
@@ -50,12 +62,12 @@ public class FlickrActivityFragment extends Fragment {
             }
         });
 
-
         mImageDownloader.start();
         mImageDownloader.getLooper();
         Log.i(TAG, "Background Thread Started!");
     }
     @Override
+    //clears downloaded pictures
     public void onDestroyView(){
         super.onDestroyView();
         mImageDownloader.clearQueue();
@@ -64,7 +76,7 @@ public class FlickrActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        query = (String) getArguments().get("query");
         View view = inflater.inflate(R.layout.fragment_flickr, container, false);
         mPictureView = (RecyclerView) view.findViewById(R.id.RecyclerViewPic);
         mPictureView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
@@ -76,6 +88,7 @@ public class FlickrActivityFragment extends Fragment {
             mPictureView.setAdapter(new RecyclerAdaptor(mItems));
         }
     }
+    //holds the photos to be displayed
     private class PhotoHolder extends RecyclerView.ViewHolder{
         private ImageView mItemImageView;
         public PhotoHolder(View itemView) {
@@ -86,7 +99,7 @@ public class FlickrActivityFragment extends Fragment {
             mItemImageView.setImageDrawable(drawable);
         }
     }
-
+    //puts images in recycler view for display
     private class RecyclerAdaptor extends RecyclerView.Adapter<PhotoHolder>{
         private List<GalleryItem> mGalleryItems;
         public RecyclerAdaptor(List<GalleryItem> galleryItems){
@@ -113,7 +126,7 @@ public class FlickrActivityFragment extends Fragment {
             return mGalleryItems.size();
         }
     }
-
+    //flickr async task for getting information from flickr
     private class FetchPictures extends AsyncTask<Void, Void, List<GalleryItem>>{
         ProgressDialog mDialog = new ProgressDialog(getContext());
         @Override
@@ -121,7 +134,7 @@ public class FlickrActivityFragment extends Fragment {
             FlickrPicker picker = new FlickrPicker();
             List<GalleryItem> someList = null;
             try {
-                someList = picker.fetchItems();
+                someList = picker.searchPhotots(query);
             }catch (android.os.NetworkOnMainThreadException e){
                 e.printStackTrace();
             }
@@ -132,17 +145,9 @@ public class FlickrActivityFragment extends Fragment {
             mItems = items;
             setupAdapter();
         }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            mDialog.setMessage("Getting Images");
-        }
-        @Override
-        protected void onPreExecute() {
-            mDialog.show();
-        }
     }
     @Override
+    //closes image downloader
     public void onDestroy(){
         super.onDestroy();
         mImageDownloader.quit();
