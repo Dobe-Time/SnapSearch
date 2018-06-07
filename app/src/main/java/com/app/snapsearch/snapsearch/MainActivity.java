@@ -12,10 +12,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.service.media.MediaBrowserService;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -82,25 +84,9 @@ public class MainActivity extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
             }
-//        if(resultCode == RESULT_OK){
-//            //if happens, everything worked
-//            if(requestCode == IMAGE_GALLERY_REQUEST){
-//                //if happens we hear back from the image gallery
-////                Uri imageUri = data.getData();
-//                //InputStream inputStream;
-//                Bitmap image = (Bitmap) data.getExtras().get("data");
-//                imgPicture.setImageBitmap(image);
-////                try {
-////                    inputStream = getContentResolver().openInputStream(imageUri);
-////
-////                } catch (FileNotFoundException e){
-////                    e.printStackTrace();
-////                    Toast.makeText(this, "Unable to open image", Toast.LENGTH_LONG).show();
-////                }
+
             }
         }
-
-    //}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +95,16 @@ public class MainActivity extends AppCompatActivity {
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         final Intent flickr = new Intent(getApplicationContext(),FlickrActivityFragment.class);
         int pictureId = R.drawable.tree;
+
         ImageView imgPicture = (ImageView) this.findViewById(R.id.ImgPicture);
+        Button btnCamera = (Button)findViewById(R.id.TakePictureButton);
+        btnCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent,0);
+            }
+        });
 
         // Hooks up image button in activity_main to the java object.
         ImageButton cameraButton = (ImageButton) findViewById(R.id.CameraButton);
