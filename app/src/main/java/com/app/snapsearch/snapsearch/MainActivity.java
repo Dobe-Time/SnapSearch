@@ -41,8 +41,7 @@ import java.io.OutputStream;
 public class MainActivity extends AppCompatActivity {
     public static final int IMAGE_GALLERY_REQUEST = 20;
     private  static final String TAG =  "ComputerVisionUtil";
-    //REMEMBER TO GET KEY OUT OF HERE
-    // Parmas for constructor are api key and region of api key.
+    // Parmas for constructor are api key and region of api key for computer vision.
     private static final String KEY = "2ee6b523d54e4bf3af298d87e2314354";
     public  VisionServiceClient visionServiceClient = new VisionServiceRestClient(KEY, "https://westus2.api.cognitive.microsoft.com/vision/v2.0");
     public static final int CAMERA_REQUEST = 1;
@@ -82,23 +81,8 @@ public class MainActivity extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
             }
-//        if(resultCode == RESULT_OK){
-//            //if happens, everything worked
-//            if(requestCode == IMAGE_GALLERY_REQUEST){
-//                //if happens we hear back from the image gallery
-////                Uri imageUri = data.getData();
-//                //InputStream inputStream;
-//                Bitmap image = (Bitmap) data.getExtras().get("data");
-//                imgPicture.setImageBitmap(image);
-////                try {
-////                    inputStream = getContentResolver().openInputStream(imageUri);
-////
-////                } catch (FileNotFoundException e){
-////                    e.printStackTrace();
-////                    Toast.makeText(this, "Unable to open image", Toast.LENGTH_LONG).show();
-////                }
-            }
         }
+    }
 
     //}
 
@@ -113,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Hooks up image button in activity_main to the java object.
         ImageButton cameraButton = (ImageButton) findViewById(R.id.CameraButton);
+        //This try catch loop for a json syntax exeption that will arise from the use of the Azure
+        //async task.
         try {
             cameraButton.setOnClickListener(new View.OnClickListener() {
                 ProgressDialog mDialog = new ProgressDialog(MainActivity.this);
@@ -161,20 +147,20 @@ public class MainActivity extends AppCompatActivity {
                             AnalysisResult result = new Gson().fromJson(s, AnalysisResult.class);
                             TextView textView = (TextView)findViewById(R.id.textView);
                             StringBuilder stringBuilder = new StringBuilder();
-
-//                            for(Caption caption : result.description.captions){
-//                                stringBuilder.append(caption.text);
-//                            }
+                            // adds all the"tags" from the json out put of computer vision and makes a string.
+                            // This string will be displayed on screen and passed in as flikr's query.
                             for(Tag tag : result.tags){
                                 stringBuilder.append(tag.name + " ");
                             }
 
                             textView.setText(stringBuilder);
                             Toast.makeText(MainActivity.this, "Fully Loaded", Toast.LENGTH_SHORT).show();
+                            // bundle to pass  in search query
                             Bundle bundle = new Bundle();
                             bundle.putString("query", stringBuilder.toString());
                             FlickrActivityFragment fragment = new FlickrActivityFragment();
                             fragment.setArguments(bundle);
+                            //launches flikr fragment.
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                             transaction.replace(R.id.activity_main, fragment);
                             transaction.commit();
@@ -195,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    //makes it so when leaving the choose picture intent the image displayed will become the chosen image.
     protected void onResume() {
         super.onResume();
         if(image != null){
@@ -204,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+    //method to correctly set image from bitmap or to use default timesquare as a place holder.
     public ByteArrayInputStream setImage(Bitmap image){
         Bitmap mBitmap;
         if (image == null){
@@ -215,22 +203,3 @@ public class MainActivity extends AppCompatActivity {
         return inputStream;
     }
 }
-//    public void onImageGallerySelected(View v){
-//        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-//
-//        File pictureDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_ALARMS);
-//        String pictureDirectoryPath = pictureDirectory.getPath();
-//
-//        Uri data = Uri.parse(pictureDirectoryPath);
-//
-//        photoPickerIntent.setDataAndType(data, "image/*");
-//
-//        startActivityForResult(photoPickerIntent, IMAGE_GALLERY_REQUEST);
-//    }
-//
-//    public void onActivityResult(int requestCode, int resultCode, Intent data){
-//        super.onActivityResult(requestCode,resultCode,data);
-//
-//    }
-
-

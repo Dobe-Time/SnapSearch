@@ -22,9 +22,10 @@ import java.util.List;
 //Make it a try catch.
 public class FlickrPicker {
     private static final String TAG = "FlickrFetcher";
+    //api key for flikr
     private static final String API_KEY = "3f4a24364038b034dcfe90f376b69b79";
-    private static final String FETCH_RECENTS_METHOD = "flickr.photos.getRecent";
     private static final String SEARCH_METHOD = "flickr.photos.search";
+    // builds search uri
     private static final  Uri ENDPOINT = Uri.parse("https://api.flickr.com/services/rest/")
             .buildUpon()
             .appendQueryParameter("method", SEARCH_METHOD)
@@ -33,11 +34,10 @@ public class FlickrPicker {
             .appendQueryParameter("nojsoncallback", "1")
             .appendQueryParameter("extras", "url_s")
             .build();
-
+    //connects to flickr
     public byte[] getUrlByte(String urlSpec) throws IOException{
         URL url = new URL(urlSpec);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-
         try{
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             InputStream inputStream = connection.getInputStream();
@@ -88,10 +88,12 @@ public class FlickrPicker {
             items.add(item);
         }
     }
+    //builds url with query added, then sends to downloadGalleryItems, to search flickr.
     public List<GalleryItem> searchPhotots(String query){
         String url = buildUrl(SEARCH_METHOD, query);
         return downloadGalleryItems(url);
     }
+    //build url with query
     private String buildUrl(String method, String query){
         Uri.Builder uriBuilder = ENDPOINT.buildUpon();
         if (method.equals(SEARCH_METHOD)){

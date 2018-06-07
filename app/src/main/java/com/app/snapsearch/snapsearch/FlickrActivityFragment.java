@@ -35,12 +35,12 @@ public class FlickrActivityFragment extends Fragment {
     String query;
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        //call to fetch pictures async talsk to get picturs loaded from flickr
         FetchPictures fetcher = new FetchPictures();
         fetcher.execute();
-
+        //gets pictures from flickr and binds them to photo holder to be displayed.
         Handler responseHandler = new Handler();
         mImageDownloader = new ImageDownloader<>(responseHandler);
         mImageDownloader.setmImageDownloaderListener(new ImageDownloader.ImageDownloaderListener<PhotoHolder>() {
@@ -57,6 +57,7 @@ public class FlickrActivityFragment extends Fragment {
         Log.i(TAG, "Background Thread Started!");
     }
     @Override
+    //clears downloaded pictures
     public void onDestroyView(){
         super.onDestroyView();
         mImageDownloader.clearQueue();
@@ -77,6 +78,7 @@ public class FlickrActivityFragment extends Fragment {
             mPictureView.setAdapter(new RecyclerAdaptor(mItems));
         }
     }
+    //holds the photos to be displayed
     private class PhotoHolder extends RecyclerView.ViewHolder{
         private ImageView mItemImageView;
         public PhotoHolder(View itemView) {
@@ -87,7 +89,7 @@ public class FlickrActivityFragment extends Fragment {
             mItemImageView.setImageDrawable(drawable);
         }
     }
-
+    //puts images in recycler view for display
     private class RecyclerAdaptor extends RecyclerView.Adapter<PhotoHolder>{
         private List<GalleryItem> mGalleryItems;
         public RecyclerAdaptor(List<GalleryItem> galleryItems){
@@ -114,7 +116,7 @@ public class FlickrActivityFragment extends Fragment {
             return mGalleryItems.size();
         }
     }
-
+    //flickr async task for getting information from flickr
     private class FetchPictures extends AsyncTask<Void, Void, List<GalleryItem>>{
         ProgressDialog mDialog = new ProgressDialog(getContext());
         @Override
@@ -133,17 +135,9 @@ public class FlickrActivityFragment extends Fragment {
             mItems = items;
             setupAdapter();
         }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            mDialog.setMessage("Getting Images");
-        }
-        @Override
-        protected void onPreExecute() {
-            mDialog.show();
-        }
     }
     @Override
+    //closes image downloader
     public void onDestroy(){
         super.onDestroy();
         mImageDownloader.quit();
