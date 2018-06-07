@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-
+//main class
 public class MainActivity extends AppCompatActivity {
     public static final int IMAGE_GALLERY_REQUEST = 20;
     private  static final String TAG =  "ComputerVisionUtil";
