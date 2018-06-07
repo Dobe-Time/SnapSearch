@@ -16,6 +16,7 @@ import android.support.annotation.DrawableRes;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import com.google.gson.JsonSyntaxException;
 import com.microsoft.projectoxford.vision.VisionServiceClient;
 import com.microsoft.projectoxford.vision.VisionServiceRestClient;
 import com.microsoft.projectoxford.vision.contract.AnalysisResult;
+import com.microsoft.projectoxford.vision.contract.Caption;
 import com.microsoft.projectoxford.vision.contract.Tag;
 import com.microsoft.projectoxford.vision.rest.VisionServiceException;
 
@@ -89,7 +91,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+        final Button doneButton = (Button) findViewById(R.id.backButton);
+        doneButton.setVisibility(View.GONE);
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         final Intent flickr = new Intent(getApplicationContext(),FlickrActivityFragment.class);
         int pictureId = R.drawable.tree;
@@ -113,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                                 //This describes the loading message
                                 publishProgress("Loading....");
                                 // These lines specify which Json tags will be taken from visionServiceClient.analyzeImage.
-                                String[] features = {"tags"};
+                                String[] features = {"description"};
                                 String[] details = {};
                                 // The big one, the call to the Image recognition API.
                                 AnalysisResult result = visionServiceClient.analyzeImage(inputStream1 , features, details);
@@ -149,10 +154,9 @@ public class MainActivity extends AppCompatActivity {
                             StringBuilder stringBuilder = new StringBuilder();
                             // adds all the"tags" from the json out put of computer vision and makes a string.
                             // This string will be displayed on screen and passed in as flikr's query.
-                            for(Tag tag : result.tags){
-                                stringBuilder.append(tag.name + " ");
+                            for(Caption caption : result.description.captions){
+                                stringBuilder.append(caption.text + " ");
                             }
-
                             //textView.setText(stringBuilder);
                             Toast.makeText(MainActivity.this, "Fully Loaded", Toast.LENGTH_SHORT).show();
                             // bundle to pass  in search query
@@ -161,18 +165,15 @@ public class MainActivity extends AppCompatActivity {
                             FlickrActivityFragment fragment = new FlickrActivityFragment();
                             fragment.setArguments(bundle);
                             //launches flikr fragment.
+                            doneButton.setVisibility(View.VISIBLE);
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                             transaction.replace(R.id.activity_main, fragment);
                             transaction.commit();
-
                         }
                     };
                     //CALL TO THE ASYNC TASK.
                     visonTask.execute(setImage(image));
                 }
-                // startActivity(captureImage);
-                //puts the date in a bundle stored in a map. value????? use bitmap
-                //captureImage.putExtra(MediaStore.EXTRA_OUTPUT, 0);
             });
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
@@ -201,5 +202,14 @@ public class MainActivity extends AppCompatActivity {
         image.compress(Bitmap.CompressFormat.JPEG, 50, outputStream);
         final ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
         return inputStream;
+    }
+
+    @Override
+    //closes fragment goes back to home screen and hides done button.
+    public void onBackPressed() {
+        super.onBackPressed();
+        Button doneButton = findViewById(R.id.backButton);
+        doneButton.setVisibility(View.GONE);
+        onStop();
     }
 }

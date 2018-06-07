@@ -56,9 +56,11 @@ public class FlickrPicker {
             connection.disconnect();
         }
     }
+    //url string for the search
     public String getUrlString(String urlSpec)throws IOException{
         return new String(getUrlByte(urlSpec));
     }
+    //downloads gallery items.
     private List<GalleryItem> downloadGalleryItems(String url) {
         List<GalleryItem> items = new ArrayList<GalleryItem>();
         try{
@@ -72,6 +74,7 @@ public class FlickrPicker {
         }
         return items;
     }
+    //takes in the returned json string and parses it into usable items and returns a list of them.
     private void parseItems(List<GalleryItem> items, JSONObject jsonBody)throws IOException, JSONException{
         JSONObject photosJsonObject = jsonBody.getJSONObject("photos");
         JSONArray photosJsonArray = photosJsonObject.getJSONArray("photo");

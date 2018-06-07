@@ -13,8 +13,11 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,7 +39,15 @@ public class FlickrActivityFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Button backButton = getActivity().findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
         setRetainInstance(true);
+        setHasOptionsMenu(true);
         //call to fetch pictures async talsk to get picturs loaded from flickr
         FetchPictures fetcher = new FetchPictures();
         fetcher.execute();
@@ -50,7 +61,6 @@ public class FlickrActivityFragment extends Fragment {
                 photoHolder.bindDrawable(drawable);
             }
         });
-
 
         mImageDownloader.start();
         mImageDownloader.getLooper();
