@@ -16,6 +16,7 @@ import android.support.annotation.DrawableRes;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -101,9 +102,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
     //}
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Button btnCamera = (Button)findViewById(R.id.TakePictureButton);
+        btnCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, 0);
+            }
+        });
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
