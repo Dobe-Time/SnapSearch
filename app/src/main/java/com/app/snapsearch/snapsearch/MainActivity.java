@@ -159,11 +159,11 @@ public class MainActivity extends AppCompatActivity {
                             StringBuilder stringBuilder = new StringBuilder();
                             // adds all the"tags" from the json out put of computer vision and makes a string.
                             // This string will be displayed on screen and passed in as flikr's query.
-                            for(Caption caption : result.description.captions){
-                                stringBuilder.append(caption.text + " ");
+                            for(int i = 0; i < result.description.captions.size() - 1; i++){
+                                stringBuilder.append(result.description.captions.get(i).text + " ");
                             }
-                            //textView.setText(stringBuilder);
-                            Toast.makeText(MainActivity.this, "Fully Loaded", Toast.LENGTH_SHORT).show();
+                            stringBuilder.append(result.description.captions.get(result.description.captions.size()-1).text);
+                            Toast.makeText(MainActivity.this, stringBuilder, Toast.LENGTH_LONG).show();
                             // bundle to pass  in search query
                             Bundle bundle = new Bundle();
                             bundle.putString("query", stringBuilder.toString());
