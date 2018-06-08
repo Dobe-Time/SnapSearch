@@ -76,9 +76,11 @@ public class FlickrActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //gets the query from the bundle made in mainActivity
         query = (String) getArguments().get("query");
         View view = inflater.inflate(R.layout.fragment_flickr, container, false);
         mPictureView = (RecyclerView) view.findViewById(R.id.RecyclerViewPic);
+        //sets up the recycler view for holding pictures.
         mPictureView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         setupAdapter();
         return  view;
@@ -140,8 +142,9 @@ public class FlickrActivityFragment extends Fragment {
             }
             return someList;
         }
+        //makes mItems equal the List created in the async task
+        // and sets calls setup adapter to setup recycler view.
         protected void onPostExecute(List<GalleryItem> items){
-            mDialog.dismiss();
             mItems = items;
             setupAdapter();
         }

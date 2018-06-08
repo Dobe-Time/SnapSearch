@@ -24,6 +24,7 @@ public class ImageDownloader<T> extends HandlerThread {
         super(TAG);
         mResponseHandler = responseHandler;
     }
+    //Listens for if an image is downloaded
     public interface ImageDownloaderListener<T>{
         void onImageDownloaded(T target, Bitmap thumbnail);
     }
@@ -48,6 +49,7 @@ public class ImageDownloader<T> extends HandlerThread {
         mResponseHandler.removeMessages(MESSAGE_DOWNLOADED);
         mRequestMap.clear();
     }
+    //handles requests to load pictures
     private void handleRequest(final T target){
         try{
             final String url = mRequestMap.get(target);
@@ -57,6 +59,7 @@ public class ImageDownloader<T> extends HandlerThread {
             byte[] bitmapBytes = new FlickrPicker().getUrlByte(url);
             final Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
             Log.i(TAG, "Bitmap made");
+            //responds to requests
             mResponseHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -72,6 +75,7 @@ public class ImageDownloader<T> extends HandlerThread {
         }
     }
     @Override
+    //looper to handle requests.
     protected void onLooperPrepared(){
         mReqest = new Handler(){
             @Override
