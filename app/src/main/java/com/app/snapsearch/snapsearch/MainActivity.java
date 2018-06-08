@@ -104,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
     //}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         Button btnCamera = (Button)findViewById(R.id.TakePictureButton);
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,8 +114,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(cameraIntent, 0);
             }
         });
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         final Intent flickr = new Intent(getApplicationContext(),FlickrActivityFragment.class);
         int pictureId = R.drawable.tree;
