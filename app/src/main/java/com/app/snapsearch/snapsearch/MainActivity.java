@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //resets the picture if the phone is rotated so the picture is no lost.
         if(savedInstanceState != null){
             image = (Bitmap) savedInstanceState.get("image");
         }
@@ -196,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
+    //This is overrided so that the image is not lost when the phone is rotated.
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
