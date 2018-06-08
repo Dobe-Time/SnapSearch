@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.FragmentTransaction;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        if (requestCode == IMAGE_GALLERY_REQUEST) {
+        if (requestCode == IMAGE_GALLERY_REQUEST || requestCode == 0) {
             Bitmap datifoto = null;
             Uri picUri = data.getData();//<- get Uri here from data intent
             if(picUri !=null){
@@ -88,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if(savedInstanceState != null){
+            image = (Bitmap) savedInstanceState.get("image");
+        }
         Button btnCamera = (Button)findViewById(R.id.TakePictureButton);
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,11 +102,8 @@ public class MainActivity extends AppCompatActivity {
         });
         final Button doneButton = (Button) findViewById(R.id.backButton);
         doneButton.setVisibility(View.GONE);
-        final Intent captureImage = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         final Intent flickr = new Intent(getApplicationContext(),FlickrActivityFragment.class);
         int pictureId = R.drawable.tree;
-        ImageView imgPicture = (ImageView) this.findViewById(R.id.ImgPicture);
-
         // Hooks up image button in activity_main to the java object.
         ImageButton cameraButton = (ImageButton) findViewById(R.id.CameraButton);
         //This try catch loop for a json syntax exeption that will arise from the use of the Azure
@@ -195,6 +196,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("image", image);
+    }
+
     //method to correctly set image from bitmap or to use default timesquare as a place holder.
     public ByteArrayInputStream setImage(Bitmap image){
         Bitmap mBitmap;

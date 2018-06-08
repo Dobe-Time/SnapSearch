@@ -41,17 +41,28 @@
         android:text="@string/button_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.769"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ImgPicture"
-        app:layout_constraintVertical_bias="0.863" />
+        app:layout_constraintVertical_bias="0.934" />
 
     <Button
         android:id="@+id/TakePictureButton"
-        android:layout_width="100dp"
-        android:layout_height="59dp"
+        android:layout_width="105dp"
+        android:layout_height="61dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
         android:text="@string/button_picture"
-        android:onClick="onTakePicture"/>
+        app:layout_constraintBottom_toTopOf="@+id/barrier2"
+        app:layout_constraintEnd_toStartOf="@+id/UploadButton"
+        app:layout_constraintHorizontal_bias="0.877"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/CameraButton"
+        app:layout_constraintVertical_bias="0.695" />
 
     <TextView
         android:id="@+id/textView"
